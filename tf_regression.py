@@ -1,7 +1,6 @@
 # refactored from the examples at https://github.com/aymericdamien/TensorFlow-Examples
 import tensorflow as tf
 import numpy
-import os
 
 
 class TensorFlowRegressionModel:
