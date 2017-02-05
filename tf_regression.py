@@ -47,7 +47,7 @@ class TensorFlowRegressionModel:
 
         return
 
-    def train(self, train_X, train_Y, learning_rate, training_epochs, model_output_dir=None, with_plot=False):
+    def train(self, train_X, train_Y, learning_rate, training_epochs, model_output_dir=None):
         n_samples = train_X.shape[0]
         # Mean squared error
         cost = tf.reduce_sum(tf.pow(self.model - self.vars['Y'], 2)) / (2 * n_samples)
@@ -61,13 +61,8 @@ class TensorFlowRegressionModel:
             for epoch in range(training_epochs):
                 for x, y in zip(train_X, train_Y):
                     sess.run(optimizer, feed_dict={self.vars['X']: x, self.vars['Y']: y})
-            # Print final metrics
-            print "Epoch:", '%04d' % (epoch + 1), "W=", sess.run(self.vars['W']), "b=", sess.run(self.vars['b'])
             # Save model locally
             saver.save(sess, model_output_dir + 'model.ckpt')
-            # Plot data if requested
-            if with_plot:
-                self.plot_data_vs_fitted(train_X, train_Y, sess.run(self.vars['W']) * train_X + sess.run(self.vars['b']))
 
         # Finally upload model to bucket
         self.upload_model_to_bucket('')
@@ -75,11 +70,11 @@ class TensorFlowRegressionModel:
         return
 
     def upload_model_to_bucket(self, bucket_name):
-        filenames = [os.path.join('model/', fn) for fn in next(os.walk('model/'))[2]]
+        filenames = next(os.walk('model/'))[2]
         print filenames
         with zipfile.ZipFile("model/test.zip", "w") as z:
             for f in filenames:
-                z.write(f)
+                z.write('model/{0}'.format(f), arcname=f)
 
         return
 

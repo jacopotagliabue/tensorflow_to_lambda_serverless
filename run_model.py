@@ -30,7 +30,7 @@ def main():
     # instantiate class for training
     r = TensorFlowRegressionModel(Config)
     # train a model
-    r.train(train_X, train_Y, LEARNING_RATE, TRAINING_EPOCHS, MODEL_DIR, with_plot=True)
+    r.train(train_X, train_Y, LEARNING_RATE, TRAINING_EPOCHS, MODEL_DIR)
     # make some predictions
     #r.predict(tf_restored_sess, test_X, test_Y, with_plot=True)
 
