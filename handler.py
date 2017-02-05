@@ -18,8 +18,10 @@ Declare here global objects living across requests
 # use Pythonic ConfigParser to handle settings
 Config = ConfigParser.ConfigParser()
 Config.read(HERE + '/settings.ini')
-# instantiate the tf_model in "prediction" mode
+# instantiate the tf_model in "prediction mode"
 tf_model = TensorFlowRegressionModel(Config, is_training=False)
+# just print a message so we can verify in AWS the loading of dependencies was correct
+print "loaded done!"
 
 
 def validate_input(input_val):
@@ -76,13 +78,13 @@ def predict(event, context):
         # check parameter
         if validate_input(x_val):
             # get prediction
-            value = tf_model.predict(x_val)
+            value = tf_model.predict(6.83)
         else:
             raise "Input parameter has invalid type: float expected"
     except Exception as ex:
         error_response = {
             'error_message': "Unexpected error",
-            'stack_trace': str(ex)
+            'stack_trace': ex
         }
         return return_lambda_gateway_response(503, error_response)
 

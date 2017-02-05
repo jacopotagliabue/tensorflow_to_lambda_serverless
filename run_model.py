@@ -22,17 +22,15 @@ def main():
                              7.042, 10.791, 5.313, 7.997, 5.654, 9.27, 3.1])
     train_Y = numpy.asarray([1.7, 2.76, 2.09, 3.19, 1.694, 1.573, 3.366, 2.596, 2.53, 1.221,
                              2.827, 3.465, 1.65, 2.904, 2.42, 2.94, 1.3])
-    # testing data
-    test_X = numpy.asarray([6.83, 4.668, 8.9, 7.91, 5.7, 8.7, 3.1, 2.1])
-    test_Y = numpy.asarray([1.84, 2.273, 3.2, 2.831, 2.92, 3.24, 1.35, 1.03])
-
-
     # instantiate class for training
-    r = TensorFlowRegressionModel(Config)
-    # train a model
-    r.train(train_X, train_Y, LEARNING_RATE, TRAINING_EPOCHS, MODEL_DIR)
+    #r = TensorFlowRegressionModel(Config)
+    #r.train(train_X, train_Y, LEARNING_RATE, TRAINING_EPOCHS, MODEL_DIR)
     # make some predictions
-    #r.predict(tf_restored_sess, test_X, test_Y, with_plot=True)
+    test_val = 6.83
+    r = TensorFlowRegressionModel(Config, is_training=False)
+    y_pred = r.predict(test_val)
+    print y_pred
+    assert y_pred > 2.48 and y_pred < 2.52
 
     return
 

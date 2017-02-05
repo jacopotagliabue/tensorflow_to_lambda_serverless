@@ -1,25 +1,18 @@
 # refactored from the examples at https://github.com/aymericdamien/TensorFlow-Examples
-from s3_client import s3Client
 import tensorflow as tf
 import numpy
-import matplotlib
-matplotlib.use('TkAgg')  # avoid mac backend error
-import matplotlib.pyplot as plt
-import zipfile
 import os
 
 
 class TensorFlowRegressionModel:
 
     def __init__(self, config, is_training=True):
-        # initialize s3 client to communicate with s3 buckets
-        self.s3client = s3Client(config)
         # store the model variables into a class object
         self.vars = self.set_vars()
         self.model = self.build_model(self.vars)
         # if it is not training, restore the model and store the session in the class
         if not is_training:
-            self.sess = self.restore_model_from_bucket()
+            self.sess = self.restore_model(config.get('model', 'LOCAL_MODEL_FOLDER'))
 
         return
 
@@ -42,10 +35,14 @@ class TensorFlowRegressionModel:
         """
         return tf.add(tf.mul(vars['X'], vars['W']), vars['b'])
 
-    def restore_model_from_bucket(self, bucket_name):
+    def restore_model(self, model_dir):
+        sess = tf.Session()
+        saver = tf.train.Saver()
+        ckpt = tf.train.get_checkpoint_state(model_dir)
+        if ckpt and ckpt.model_checkpoint_path:
+            saver.restore(sess, ckpt.model_checkpoint_path)
 
-
-        return
+        return sess
 
     def train(self, train_X, train_Y, learning_rate, training_epochs, model_output_dir=None):
         n_samples = train_X.shape[0]
@@ -64,28 +61,7 @@ class TensorFlowRegressionModel:
             # Save model locally
             saver.save(sess, model_output_dir + 'model.ckpt')
 
-        # Finally upload model to bucket
-        self.upload_model_to_bucket('')
-
-        return
-
-    def upload_model_to_bucket(self, bucket_name):
-        filenames = next(os.walk('model/'))[2]
-        print filenames
-        with zipfile.ZipFile("model/test.zip", "w") as z:
-            for f in filenames:
-                z.write('model/{0}'.format(f), arcname=f)
-
         return
 
     def predict(self, x_val):
-
-        return x_val
-
-    def plot_data_vs_fitted(self, _x, _y, _fitted):
-        plt.plot(_x, _y, 'ro', label='Original data')
-        plt.plot(_x, _fitted, label='Fitted line')
-        plt.legend()
-        plt.show()
-
-        return
+        return self.sess.run(self.vars['W']) * x_val + self.sess.run(self.vars['b'])
