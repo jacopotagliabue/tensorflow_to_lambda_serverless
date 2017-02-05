@@ -1,8 +1,3 @@
-[s3]
-ACCESS_KEY = ''
-SECRET_KEY = ''
-AWS_HOST = ''
-
 [model]
 LOCAL_MODEL_FOLDER = ''
 LEARNING_RATE = 0
