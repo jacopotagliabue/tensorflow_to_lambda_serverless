@@ -73,12 +73,10 @@ def predict(event, context):
 
     """
     try:
-        # use the helper function to retrieve the value from the query string
-        x_val = get_param_from_url(event, 'x')
-        # check parameter
-        if validate_input(x_val):
-            # get prediction
-            value = tf_model.predict(6.83)
+        param = get_param_from_url(event, 'x')
+        x_val = validate_input(param)
+        if x_val:
+            value = tf_model.predict(x_val)
         else:
             raise "Input parameter has invalid type: float expected"
     except Exception as ex:
