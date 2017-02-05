@@ -22,10 +22,10 @@ def main():
                              7.042, 10.791, 5.313, 7.997, 5.654, 9.27, 3.1])
     train_Y = numpy.asarray([1.7, 2.76, 2.09, 3.19, 1.694, 1.573, 3.366, 2.596, 2.53, 1.221,
                              2.827, 3.465, 1.65, 2.904, 2.42, 2.94, 1.3])
-    # instantiate class for training
-    #r = TensorFlowRegressionModel(Config)
-    #r.train(train_X, train_Y, LEARNING_RATE, TRAINING_EPOCHS, MODEL_DIR)
-    # make some predictions
+    # Uncomment here for training again the model
+    # r = TensorFlowRegressionModel(Config)
+    # r.train(train_X, train_Y, LEARNING_RATE, TRAINING_EPOCHS, MODEL_DIR)
+    # make some predictions with the stored model
     test_val = 6.83
     r = TensorFlowRegressionModel(Config, is_training=False)
     y_pred = r.predict(test_val)

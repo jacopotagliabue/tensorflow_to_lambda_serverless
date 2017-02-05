@@ -84,11 +84,11 @@ def predict(event, context):
     except Exception as ex:
         error_response = {
             'error_message': "Unexpected error",
-            'stack_trace': ex
+            'stack_trace': str(ex)
         }
         return return_lambda_gateway_response(503, error_response)
 
-    return return_lambda_gateway_response(200, value)
+    return return_lambda_gateway_response(200, {'value': value})
 
 
 
