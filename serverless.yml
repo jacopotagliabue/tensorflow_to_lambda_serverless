@@ -1,4 +1,4 @@
-frameworkVersion: "=1.2.1"
+frameworkVersion: ">=1.2.1"
 
 service: tensorflow-lambda-regression
 
